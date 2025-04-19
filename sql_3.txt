@@ -1,0 +1,20 @@
+SELECT 
+    c.client_id, 
+    c.name, 
+    c.age,
+    COUNT(DISTINCT a.account_id) AS total_accounts,
+    SUM(a.balance) AS total_balance,
+    COUNT(DISTINCT CASE WHEN t.transaction_type = 'deposit' THEN t.transaction_id END) AS total_deposits,
+    COUNT(DISTINCT CASE WHEN t.transaction_type = 'withdrawal' THEN t.transaction_id END) AS total_withdrawals
+FROM 
+    clients c
+JOIN 
+    accounts a ON c.client_id = a.client_id
+LEFT JOIN 
+    transactions t ON a.account_id = t.account_id
+WHERE 
+    c.registration_date >= '2020-01-01'
+GROUP BY 
+    c.client_id, c.name, c.age
+ORDER BY 
+    total_balance DESC;

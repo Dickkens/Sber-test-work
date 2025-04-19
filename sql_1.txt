@@ -1,0 +1,9 @@
+SELECT u.username,
+       ur.role,
+       COUNT(ua.id) AS activity_count
+FROM users u
+JOIN user_roles ur ON u.id = ur.user_id
+JOIN user_activity ua ON u.id = ua.user_id
+WHERE ua.activity_date >= CURRENT_DATE - INTERVAL '1 MONTH'
+GROUP BY u.id, ur.role
+ORDER BY activity_count DESC;

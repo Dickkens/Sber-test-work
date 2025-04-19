@@ -1,0 +1,23 @@
+WITH matching_transactions AS (
+    SELECT t.inn, t.account, t.operation_datetime, t.operation_sum, t.ctrg_inn, t.ctrg_account, t.doc_id, tr.credit_num
+    FROM transactions t
+    JOIN tranches tr
+    ON t.inn = tr.inn
+    AND t.account = tr.account
+    AND t.operation_sum = tr.operation_sum
+    AND t.operation_datetime BETWEEN tr.operation_datetime AND tr.operation_datetime + INTERVAL '10 days'
+),
+over_threshold_transactions AS (
+    SELECT t.inn, t.account, t.operation_datetime, t.operation_sum, t.ctrg_inn, t.ctrg_account, t.doc_id, tr.credit_num
+    FROM transactions t
+    JOIN tranches tr
+    ON t.inn = tr.inn
+    AND t.account = tr.account
+    AND t.operation_sum > tr.operation_sum
+)
+SELECT inn, account, operation_datetime, operation_sum, ctrg_inn, ctrg_account, doc_id, credit_num
+FROM matching_transactions
+UNION
+SELECT inn, account, operation_datetime, operation_sum, ctrg_inn, ctrg_account, doc_id, credit_num
+FROM over_threshold_transactions
+ORDER BY inn, operation_datetime;
