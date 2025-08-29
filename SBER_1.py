@@ -26,9 +26,9 @@ def min_max_distance(n, k, L):
 
 
 if __name__ == "__main__":
-    n = 3
-    k = 3
-    L = [10, 20, 30]
+    n = 5
+    k = 4
+    L = [100, 180, 50,45,150]
 
     print("Новое распределение расстояний между банкоматами:")
     print(min_max_distance(n, k, L))
